@@ -1,0 +1,6 @@
+---
+- name: Hypervisor - create-ssh-keys | Include create-ssh-keys.yml
+  include: create-ssh-keys.yml
+
+- name: Hypervisor - add-authorized-keys | Include add-authorized-keys.yml
+  include: add-authorized-keys.yml

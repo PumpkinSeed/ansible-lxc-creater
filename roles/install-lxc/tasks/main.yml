@@ -1,0 +1,6 @@
+---
+- name: LXC - install | Include install.yml
+  include: lxc-install.yml
+
+- name: LXC - configure | Include configure.yml
+  include: lxc-configure.yml

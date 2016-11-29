@@ -1,0 +1,3 @@
+---
+- name: Hypervisor - add-authorized-keys | Add authorized key
+  shell: cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys

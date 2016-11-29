@@ -1,0 +1,8 @@
+---
+- name: Hypervisor - create-ssh-keys | Check id_rsa.pub
+  stat: path=/root/.ssh/id_rsa
+  register: st
+
+- name: Hypervisor - create-ssh-keys | Create ssh key if not exists
+  command: ssh-keygen -b 2048 -t rsa -f /root/.ssh/id_rsa -q -N ""
+  when: st.stat.exists == False

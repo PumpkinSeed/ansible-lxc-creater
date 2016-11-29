@@ -1,0 +1,9 @@
+127.0.0.1 nat localhost
+{% for item in domain_names %}
+{{ item }}
+{% endfor %}
+{% if containers is defined %}
+{% for item in containers %}
+{{ item.ip }} {{ item.name }}.{{ domain }}
+{% endfor %}
+{% endif %}

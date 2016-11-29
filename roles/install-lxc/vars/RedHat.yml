@@ -1,0 +1,24 @@
+---
+lxc_pkgs:
+  # - http://rpmfind.net/linux/fedora/linux/updates/testing/24/x86_64/l/lxc-2.0.0-1.fc24.x86_64.rpm
+  # - http://rpmfind.net/linux/fedora/linux/updates/testing/24/x86_64/l/lxc-libs-2.0.0-1.fc24.x86_64.rpm
+  # - http://rpmfind.net/linux/fedora/linux/updates/testing/24/x86_64/l/lxc-devel-2.0.0-1.fc24.x86_64.rpm
+  # - http://rpmfind.net/linux/fedora/linux/updates/testing/24/x86_64/l/lxc-templates-2.0.0-1.fc24.x86_64.rpm
+  # - http://rpmfind.net/linux/fedora/linux/updates/testing/24/x86_64/l/lua-lxc-2.0.0-1.fc24.x86_64.rpm
+  - https://ia-pub-deployment-artefacts.s3-eu-west-1.amazonaws.com/lxc-1.1.5-1.fc24.1.x86_64.rpm
+  - https://ia-pub-deployment-artefacts.s3-eu-west-1.amazonaws.com/lxc-libs-1.1.5-1.fc24.1.x86_64.rpm
+  - https://ia-pub-deployment-artefacts.s3-eu-west-1.amazonaws.com/lxc-devel-1.1.5-1.fc24.1.x86_64.rpm
+  - https://ia-pub-deployment-artefacts.s3-eu-west-1.amazonaws.com/lxc-templates-1.1.5-1.fc24.1.x86_64.rpm
+  - https://ia-pub-deployment-artefacts.s3-eu-west-1.amazonaws.com/lua-lxc-1.1.5-1.fc24.1.x86_64.rpm
+  - libseccomp
+  - lua-alt-getopt
+  - lua-filesystem
+  - bridge-utils
+  - gcc
+  - python-pip
+  - python-devel
+  - git
+  - tmux
+  - bash-completion
+  - openssh-server
+  - openssh-clients

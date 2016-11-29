@@ -1,0 +1,35 @@
+---
+- name: Create container - create-containers | Write current container
+  debug: var=item.name
+
+- name: Create container - create-containers | Check container folder
+  stat: path=/var/lib/lxc/{{ item.name }}.{{ domain }}
+  register: createcontainerfolder
+
+- name: Create container - create-containers | Create containers
+  lxc_container:
+    name: "{{ item.name }}.{{ domain }}"
+    container_log: true
+    template: centos
+    container_config: "{{ container_config }}"
+    container_command: |
+        yum -y install openssh-server
+        echo {{ root_password }} | passwd root --stdin
+        ssh-keygen -b 2048 -t rsa -f /root/.ssh/id_rsa -q -N ""
+        mkdir -p /srv/www
+        echo "UseDNS no" >> /etc/ssh/sshd_config
+        service sshd restart
+        echo "nameserver 8.8.8.8" > /etc/resolv.conf
+        mkdir /srv/www
+        mkdir /vagrant
+    state: stopped
+  when: createcontainerfolder.stat.exists == false
+
+- name: Create container - create-containers | Copy Vagrant SSH_key to the hosts
+  shell: cp {{ ssh_key_location }} /var/lib/lxc/{{ item.name }}.{{ domain }}/rootfs/root/.ssh/authorized_keys
+
+- name: Create container - create-containers | Add systemd
+  template: src=systemd.j2 dest=/usr/lib/systemd/system/{{ item.name }}.service
+
+- name: Create container - create-containers | Start and enable service
+  service: name={{ item.name }} state=started enabled=yes

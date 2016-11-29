@@ -1,0 +1,28 @@
+*nat
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [1:76]
+:POSTROUTING ACCEPT [0:0]
+
+{% if containers is defined %}
+{% for item in containers %}
+-A PREROUTING -p tcp -m tcp -i {{inner_if_name}} --dport {{ item.ssh_port }} -j DNAT --to-destination {{ item.ip }}:22
+{% endfor %}
+{% endif %}
+
+{% if additional_ports is defined %}
+{% for item in additional_ports %}
+-A PREROUTING -p tcp -m tcp -i {{ item.from }} --dport {{ item.outer }} -j DNAT --to-destination {{ item.to }}:{{ item.inner }}
+{% endfor %}
+{% endif %}
+
+-A POSTROUTING -o {{ nat_name }} -j MASQUERADE
+-A POSTROUTING -o {{ inner_if_name }} -j MASQUERADE
+COMMIT
+*filter
+:INPUT ACCEPT [95:5492]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [48:3648]
+-A FORWARD -i {{ nat_name }} -o {{ router_name }} -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A FORWARD -i {{ router_name }} -o {{ nat_name }} -j ACCEPT
+COMMIT

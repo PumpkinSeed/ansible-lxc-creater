@@ -1,0 +1,8 @@
+---
+- name: Create contianer - pre | Include pre.yml
+  include: pre.yml
+
+- name: Create contianer - create-containers | Include create-containers.yml
+  include: create-containers.yml
+  when: createcont.results[{{ item.running_id }}].stdout.find("RUNNING") == -1
+  with_items: "{{ cont_conf }}"

@@ -1,0 +1,54 @@
+---
+- name: Base - common | Change /etc/resolv.conf
+  shell: echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
+- name: Base - common | Remove rsyslog
+  yum: name={{ item }} state=absent
+  with_items:
+    - rsyslog
+
+- name: Base - common | Install epel-release
+  yum: name=epel-release state=installed
+
+- name: Base - common | Add domain names to the /etc/hosts
+  template: src={{ env }}-hosts.j2 dest=/etc/hosts
+
+- name: Base - common | Install some basic packages
+  yum: name={{ item }} state=installed
+  with_items:
+    - mc
+    - nano
+    - wget
+    - openssh-server
+    - openssh-clients
+    - syslog-ng
+    - syslog-ng-libdbi
+    - vim-enhanced
+    - sudo
+    - yum-plugin-fastestmirror
+    - python-pip
+    - tar
+    - git
+    - unzip
+    - gzip
+    - bzip2
+    - p7zip
+    - nc
+    - tmux
+    - cronie
+    - '@Development Tools'
+
+- name: Base - common | Start services
+  service: name={{ item }} state=started
+  with_items:
+    - crond
+    - syslog-ng
+
+- name: Base - common | Install pip tools
+  pip: name={{ item }}
+  with_items:
+    - python-consul
+    - boto
+
+- name: Base - common | Set time
+  shell: mv /etc/localtime /etc/localtime.bak && ln -s /usr/share/zoneinfo/Europe/London /etc/localtime

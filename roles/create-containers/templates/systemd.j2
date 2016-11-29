@@ -1,0 +1,16 @@
+[Unit]
+Requires=NetworkManager.service
+
+[Service]
+Type=simple
+PIDFile=/run/{{ item.name }}.pid
+{% if env == 'dev' %}
+ExecStartPre=/bin/sleep 6
+{% endif %}
+ExecStart=/bin/lxc-start -F -n {{ item.name }}.{{ domain }}
+ExecReload=/bin/lxc-stop -r -n {{ item.name }}.{{ domain }}
+ExecStop=/bin/lxc-stop -n {{ item.name }}.{{ domain }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

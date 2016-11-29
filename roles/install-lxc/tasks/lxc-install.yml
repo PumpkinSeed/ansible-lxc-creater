@@ -1,0 +1,31 @@
+---
+- name: LXC - install | Add the OS specific varibles
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: LXC - install | Check LXC present
+  shell: rpm -qa lxc
+  register: lxcpackage
+
+- name: LXC - install | Install the required  packages in Redhat derivatives
+  yum: name={{ item }} state=installed
+  with_items: "{{ lxc_pkgs }}"
+  when: ansible_os_family == 'RedHat' and lxcpackage.stdout.find("lxc-1.1.5") == -1
+
+- name: LXC - install | (TODO) Install the required packages in Debian derivatives
+  apt: name={{ item }} state=installed
+  with_items: "{{ lxc_pkgs }}"
+  environment: env
+  when: ansible_os_family == 'Debian'
+
+- name: LXC - install | Install lxc-python2 via pip
+  pip: name="lxc-python2"
+
+- name: LXC - install | Disable SELinux
+  selinux: state=disabled
+  when: ansible_os_family == 'RedHat'
+
+- name: LXC - install | Start and enable lxc stuffs
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+    - 'lxc'
+    - 'lxc-net'

@@ -1,0 +1,7 @@
+---
+- name: Base - common | Include common.yml
+  include: common.yml
+
+- name: Base - staging | Include staging.yml
+  include: server.yml
+  when: env == 'staging' or env == "prod"

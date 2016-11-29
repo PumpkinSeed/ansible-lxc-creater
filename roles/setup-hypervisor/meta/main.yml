@@ -1,0 +1,10 @@
+---
+galaxy_info:
+    author: Ferenc Fabian
+    description: An Ansible role to create SSH key.
+    company: Intern Avenue
+    min_ansible_version:
+    platforms:
+    - name: CentOS
+    categories:
+    - system

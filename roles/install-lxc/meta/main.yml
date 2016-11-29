@@ -1,0 +1,10 @@
+---
+galaxy_info:
+    author: Ferenc Fabian
+    description: An ansible role to installing lxc and config the network.
+    company: Intern Avenue
+    min_ansible_version:
+    platforms:
+    - name: CentOS
+    categories:
+    - system

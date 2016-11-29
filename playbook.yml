@@ -1,0 +1,11 @@
+---
+# ----- Dev Hypervisor
+- hosts: dev-hypervisors
+  user: root
+  become: true
+  roles:
+    - resmo.ntp
+    - setup-hypervisor
+    - initial-installation
+    - install-lxc
+    - { role: create-containers, cont_conf: "{{ containers }}" }

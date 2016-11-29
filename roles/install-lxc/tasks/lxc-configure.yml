@@ -1,0 +1,38 @@
+---
+- name: LXC - configure | Get lxcbr0 present
+  shell: ip a
+  register: interfaces
+
+- name: LXC - configure | Setting up the lxcbr0 configuration
+  template: src=ifcfg-lxcbr0.j2 dest=/etc/sysconfig/network-scripts/ifcfg-lxcbr0
+  when: interfaces.stdout.find("{{ router_name }}") == -1
+
+- name: LXC - configure | Add the lxcbr0 to the interfaces
+  command: ifup lxcbr0
+  when: interfaces.stdout.find("{{ router_name }}") == -1
+
+- name: LXC - configure | Allow the ip forward
+  command: sysctl -w net.ipv4.ip_forward=1
+
+- name: LXC - configure | Install iptables services
+  yum: pkg=iptables-services state=installed
+
+- name: LXC - configure | Add iptables rules to a saved file
+  template: src=iptables.j2 dest=/etc/iptables
+
+- name: LXC - configure | Restore the iptables from the file
+  shell: iptables-restore -c < /etc/iptables
+
+- name: LXC - configure | Check /etc/rc.d/rc.local
+  shell: cat /etc/rc.d/rc.local
+  register: rclocalcheck
+
+- name: LXC - configure | Take iptables-restore to /etc/rc.d/rc.local
+  lineinfile: dest=/etc/rc.d/rc.local line='{{ item.line }}'
+  when: rclocalcheck.stdout.find("{{ item.cond }}") == -1
+  with_items:
+    - { line: 'iptables-restore -c < /etc/iptables', cond: 'iptables-restore'}
+    - { line: 'sysctl -w net.ipv4.ip_forward=1', cond: 'net.ipv4.ip_forward'}
+
+- name: LXC - configure | Add execute to /etc/rc.d/rc.local
+  file: path=/etc/rc.d/rc.local mode=0755

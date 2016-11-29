@@ -1,0 +1,6 @@
+---
+- name: Create contianer - pre | Check container present
+  shell: lxc-info -n {{ item.name }}.{{ domain }}
+  register: createcont
+  ignore_errors: yes
+  with_items: "{{ cont_conf }}"
